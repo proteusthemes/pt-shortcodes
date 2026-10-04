@@ -8,6 +8,7 @@
  * Author:            ProteusThemes
  * Author URI:        https://www.proteusthemes.com/
  * Text Domain:       pt-shortcodes
+ * Update URI:        false
  */
 
 // If this file is called directly, abort.
@@ -60,7 +61,7 @@ class PT_Shortcodes {
 				'%1$s<span class="%2$s"%3$s></span>%4$s',
 				! empty( $atts['href'] ) ? '<a class="icon-container" href="' . ( isset( $atts['href'] ) ? esc_url( $atts['href'] ) : '#' ) . '" target="' . esc_attr( $atts['target'] ) . '">' : '<span class="icon-container">',
 				$fa_prefix . esc_attr( strtolower( $atts['icon'] ) ),
-				! empty( $atts['color'] ) ? ' style="color:' . esc_attr( $atts['color'] ) . ';"' : '',
+				! empty( $atts['color'] ) && preg_match( '/^(#[0-9a-f]{3,8}|[a-z]+|(rgb|hsl)a?\([0-9.,%\s\/]+\))$/i', $atts['color'] ) ? ' style="color:' . esc_attr( $atts['color'] ) . ';"' : '',
 				! empty( $atts['href'] ) ? '</a>' : '</span>'
 			),
 			$atts
@@ -103,7 +104,7 @@ class PT_Shortcodes {
 				isset( $atts['href'] ) ? esc_url( $atts['href'] ) : '#',
 				esc_attr( $atts['target'] ),
 				isset( $atts['fa'] ) ? '<i class="' . $fa_prefix . esc_attr( $atts['fa'] )  . '"></i> ' : '',
-				wp_kses_post( $content )
+				do_shortcode( wp_kses_post( $content ) )
 			),
 			$atts,
 			$content
@@ -125,7 +126,7 @@ class PT_Shortcodes {
 				'target'  => '_self',
 			), $atts ) );
 
-			return '<a class="social-container" href="' . esc_html( $href ) . '" target="' . esc_attr( $target ) . '"><span class="zocial-' . esc_attr( $service ) . '"></span></a>';
+			return '<a class="social-container" href="' . esc_url( $href ) . '" target="' . esc_attr( $target ) . '"><span class="zocial-' . esc_attr( $service ) . '"></span></a>';
 		}
 
 		return false;
